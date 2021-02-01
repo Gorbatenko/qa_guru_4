@@ -1,6 +1,5 @@
 package com.demoqa;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,18 +38,18 @@ public class PracticeFormTest {
         //act
         open("https://demoqa.com/automation-practice-form");
 
-        $("#firstName").shouldBe(Condition.visible).val(firstName);
-        $("#lastName").shouldBe(Condition.visible).setValue(lastName);
-        $("#userEmail").shouldBe(Condition.visible).setValue(userEmail);
+        $("#firstName").val(firstName);
+        $("#lastName").setValue(lastName);
+        $("#userEmail").setValue(userEmail);
 
-        $(byText(gender)).shouldBe(Condition.visible).click();
-        $("#userNumber").shouldBe(Condition.visible).setValue(userNumber);
+        $(byText(gender)).click();
+        $("#userNumber").setValue(userNumber);
 
-        $("#dateOfBirthInput").shouldBe(Condition.visible).click();
-        $(".react-datepicker__year-select").shouldBe(Condition.visible).click();
+        $("#dateOfBirthInput").click();
+        $(".react-datepicker__year-select").click();
         $x("//option[contains(text(),'" + yearOfBirth + "')]").scrollTo().click();
-        $(".react-datepicker__month-select").shouldBe(Condition.visible).click();
-        $x("//option[contains(text(),'" + monthOfBirth + "')]").shouldBe(Condition.visible).click();
+        $(".react-datepicker__month-select").click();
+        $x("//option[contains(text(),'" + monthOfBirth + "')]").click();
         $x("//*[@class='react-datepicker__month']/descendant::" +
                 "div[text()='" + dayOfBirth +
                 "' and not(contains(@class,'react-datepicker__day--outside-month'))]").click();
@@ -58,23 +57,23 @@ public class PracticeFormTest {
         $x("//*[@id='subjectsContainer']/descendant::input").val(subjectOne).pressEnter();
         $x("//*[@id='subjectsContainer']/descendant::input").val(subjectTwo).pressEnter();
 
-        $(byText("Sports")).shouldBe(Condition.visible).click();
-        $(byText("Reading")).shouldBe(Condition.visible).click();
-        $(byText("Music")).shouldBe(Condition.visible).click();
+        $(byText("Sports")).click();
+        $(byText("Reading")).click();
+        $(byText("Music")).click();
 
         File file = new File("src/test/resources/pictures/" + picture);
         $("#uploadPicture").uploadFile(file);
 
-        $("#currentAddress").shouldBe(Condition.visible).val(currentAddress);
-        $("#state").shouldBe(Condition.visible).click();
-        $(byText(state)).shouldBe(Condition.visible).click();
-        $("#city").shouldBe(Condition.visible).click();
-        $(byText(city)).shouldBe(Condition.visible).click();
+        $("#currentAddress").val(currentAddress);
+        $("#state").click();
+        $(byText(state)).click();
+        $("#city").click();
+        $(byText(city)).click();
 
         $("#submit").click();
 
         //assert
-        $(byText("Thanks for submitting the form")).shouldBe(Condition.visible);
+        $(byText("Thanks for submitting the form"));
         assertEquals(firstName + " " + lastName, getActualResult("Student Name"));
         assertEquals(userEmail, getActualResult("Student Email"));
         assertEquals(gender, getActualResult("Gender"));
