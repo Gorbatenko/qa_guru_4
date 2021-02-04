@@ -1,15 +1,15 @@
 package com.demoqa;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.ElementsCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PracticeFormTest {
     @BeforeEach
@@ -20,8 +20,8 @@ public class PracticeFormTest {
     @Test
     void checkStudentRegistrationForm() {
         //arrange
-        String firstName = "Anatolij";
-        String lastName = "Vasserman";
+        String firstName = "Anatolii";
+        String lastName = "Wasserman";
         String userEmail = "Vasserman@anatolij.gov";
         String gender = "Male";
         String userNumber = "0661350321";
@@ -47,22 +47,20 @@ public class PracticeFormTest {
 
         $("#dateOfBirthInput").click();
         $(".react-datepicker__year-select").click();
-        $x("//option[contains(text(),'" + yearOfBirth + "')]").scrollTo().click();
+        $$(".react-datepicker__year-select option").find(value(yearOfBirth)).click();
         $(".react-datepicker__month-select").click();
-        $x("//option[contains(text(),'" + monthOfBirth + "')]").click();
-        $x("//*[@class='react-datepicker__month']/descendant::" +
-                "div[text()='" + dayOfBirth +
-                "' and not(contains(@class,'react-datepicker__day--outside-month'))]").click();
+        $$(".react-datepicker__month-select option").find(text(monthOfBirth)).click();
+        $$(".react-datepicker__day").filter(not(cssClass(".react-datepicker__day--outside-month")))
+                .find(text(dayOfBirth)).click();
 
-        $x("//*[@id='subjectsContainer']/descendant::input").val(subjectOne).pressEnter();
-        $x("//*[@id='subjectsContainer']/descendant::input").val(subjectTwo).pressEnter();
+        $("#subjectsContainer input").val(subjectOne).pressEnter();
+        $("#subjectsContainer input").val(subjectTwo).pressEnter();
 
         $(byText("Sports")).click();
         $(byText("Reading")).click();
         $(byText("Music")).click();
 
-        File file = new File("src/test/resources/pictures/" + picture);
-        $("#uploadPicture").uploadFile(file);
+        $("#uploadPicture").uploadFromClasspath(picture);
 
         $("#currentAddress").val(currentAddress);
         $("#state").click();
@@ -73,22 +71,17 @@ public class PracticeFormTest {
         $("#submit").click();
 
         //assert
-        $(byText("Thanks for submitting the form"));
-        assertEquals(firstName + " " + lastName, getActualResult("Student Name"));
-        assertEquals(userEmail, getActualResult("Student Email"));
-        assertEquals(gender, getActualResult("Gender"));
-        assertEquals(userNumber, getActualResult("Mobile"));
-        assertEquals(dayOfBirth + " " + monthOfBirth + "," + yearOfBirth,
-                getActualResult("Date of Birth"));
-        assertTrue(getActualResult("Subjects").contains(subjectOne) &&
-                getActualResult("Subjects").contains(subjectTwo), "Subjects not contains all positions.");
-        assertTrue(getActualResult("Hobbies").contains("Sports, Reading, Music"), "Not all hobbies.");
-        assertEquals(picture, getActualResult("Picture"));
-        assertEquals(currentAddress, getActualResult("Address"));
-        assertEquals(state + " " + city, getActualResult("State and City"));
-    }
-
-    private String getActualResult(String label) {
-        return $x("//td[text()='" + label + "']/following-sibling::td").getText();
+        ElementsCollection elements = $$(".table-responsive td");
+        elements.find(text("Student Name")).sibling(0).shouldHave(text(firstName + " " + lastName));
+        elements.find(text("Student Email")).sibling(0).shouldHave(text(userEmail));
+        elements.find(text("Gender")).sibling(0).shouldHave(text(gender));
+        elements.find(text("Mobile")).sibling(0).shouldHave(text(userNumber));
+        elements.find(text("Date of Birth")).sibling(0).shouldHave(text(dayOfBirth + " " + monthOfBirth + "," + yearOfBirth));
+        elements.find(text("Student Email")).sibling(0).shouldHave(text(userEmail));
+        elements.find(text("Subjects")).sibling(0).shouldHave(text(subjectOne), text(subjectTwo));
+        elements.find(text("Hobbies")).sibling(0).shouldHave(text("Sports"), text("Reading"), text("Music"));
+        elements.find(text("Picture")).sibling(0).shouldHave(text(picture));
+        elements.find(text("Address")).sibling(0).shouldHave(text(currentAddress));
+        elements.find(text("State and City")).sibling(0).shouldHave(text(state + " " + city));
     }
 }
