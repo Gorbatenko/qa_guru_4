@@ -1,5 +1,6 @@
 package com.demoqa;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+import static com.codeborne.selenide.CollectionCondition.*;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
@@ -71,17 +73,17 @@ public class PracticeFormTest {
         $("#submit").click();
 
         //assert
-        ElementsCollection elements = $$(".table-responsive td");
-        elements.find(text("Student Name")).sibling(0).shouldHave(text(firstName + " " + lastName));
-        elements.find(text("Student Email")).sibling(0).shouldHave(text(userEmail));
-        elements.find(text("Gender")).sibling(0).shouldHave(text(gender));
-        elements.find(text("Mobile")).sibling(0).shouldHave(text(userNumber));
-        elements.find(text("Date of Birth")).sibling(0).shouldHave(text(dayOfBirth + " " + monthOfBirth + "," + yearOfBirth));
-        elements.find(text("Student Email")).sibling(0).shouldHave(text(userEmail));
-        elements.find(text("Subjects")).sibling(0).shouldHave(text(subjectOne), text(subjectTwo));
-        elements.find(text("Hobbies")).sibling(0).shouldHave(text("Sports"), text("Reading"), text("Music"));
-        elements.find(text("Picture")).sibling(0).shouldHave(text(picture));
-        elements.find(text("Address")).sibling(0).shouldHave(text(currentAddress));
-        elements.find(text("State and City")).sibling(0).shouldHave(text(state + " " + city));
+        ElementsCollection elements = $$(".table-responsive tr");
+        elements.filterBy(text("Student Name")).shouldHave(texts(firstName + " " + lastName));
+        elements.filterBy(text("Student Email")).shouldHave(texts(userEmail));
+        elements.filterBy(text("Gender")).shouldHave(texts(gender));
+        elements.filterBy(text("Mobile")).shouldHave(texts(userNumber));
+        elements.filterBy(text("Date of Birth")).shouldHave(texts(dayOfBirth + " " + monthOfBirth + "," + yearOfBirth));
+        elements.filterBy(text("Student Email")).shouldHave(texts(userEmail));
+        elements.filterBy(text("Subjects")).shouldHave(texts(subjectOne), texts(subjectTwo));
+        elements.filterBy(text("Hobbies")).shouldHave(texts("Sports"),texts("Reading"),texts("Music"));
+        elements.filterBy(text("Picture")).shouldHave(texts(picture));
+        elements.filterBy(text("Address")).shouldHave(texts(currentAddress));
+        elements.filterBy(text("State and City")).shouldHave(texts(state + " " + city));
     }
 }
