@@ -4,10 +4,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Randomizer {
@@ -118,6 +115,50 @@ public class Randomizer {
     public static double randomDouble(final double from, final double to) {
         String val = convertDoubleToString(ThreadLocalRandom.current().nextDouble(from, to));
         return parseStringToDouble(val);
+    }
+
+    /**
+     * Генерация случайного количества текстовых значений из предложенных вариантов.
+     * Значения не дублируются.
+     *
+     * @param args начальная граница
+     * @return случайный список текстовых значений из предложенных вариантов
+     */
+    public static List<String> randomValuesFromVariant(String ...args){
+        List<String> response = new ArrayList<>();
+        int responseLength = randomInt(args.length);
+
+        int lengthCounter = 0;
+        List<Integer> activeIndexes = new ArrayList<>();
+        while (lengthCounter <= responseLength) {
+            int index = randomInt(args.length);
+
+            boolean isIndexActive = false;
+            for (Integer activeIndex : activeIndexes) {
+                if (activeIndex == index) {
+                    isIndexActive = true;
+                    break;
+                }
+            }
+
+            if (!isIndexActive) {
+                response.add(args[index]);
+                activeIndexes.add(index);
+                lengthCounter++;
+            }
+        }
+
+        return response;
+    }
+
+    /**
+     * Выбор случайного значения из предложенных вариантов.
+     *
+     * @param args начальная граница
+     * @return случайное значение из предложенных вариантов
+     */
+    public static String randomValueFromVariant(String ...args){
+        return args[randomInt(args.length)];
     }
 
     /**
