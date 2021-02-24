@@ -75,18 +75,18 @@ public class PracticeFormTest {
         $("#submit").click();
 
         //assert
-        ElementsCollection elements = $$(".table-responsive tr");
-        elements.filterBy(text("Student Name")).shouldHave(texts(firstName + " " + lastName));
-        elements.filterBy(text("Student Email")).shouldHave(texts(userEmail));
-        elements.filterBy(text("Gender")).shouldHave(texts(gender));
-        elements.filterBy(text("Mobile")).shouldHave(texts(userNumber));
-        elements.filterBy(text("Date of Birth")).shouldHave(texts(dayOfBirth + " " + monthOfBirth + "," + yearOfBirth));
-        elements.filterBy(text("Student Email")).shouldHave(texts(userEmail));
-        elements.filterBy(text("Picture")).shouldHave(texts(picture));
-        elements.filterBy(text("Address")).shouldHave(texts(currentAddress));
-        elements.filterBy(text("State and City")).shouldHave(texts(state + " " + city));
-        checkByList("Subjects", subjects, elements);
-        checkByList("Hobbies", hobbies, elements);
+        SelenideElement elements = $(".table-responsive");
+        elements.shouldHave(
+                text("Student Name " + firstName + " " + lastName),
+                text("Student Email " + userEmail),
+                text("Gender " + gender),
+                text("Mobile " + userNumber),
+                text("Date of Birth " + dayOfBirth + " " + monthOfBirth + "," + yearOfBirth),
+                text("Picture " + picture),
+                text("Address " + currentAddress),
+                text("State and City " + state + " " + city));
+        checkByList(subjects, elements);
+        checkByList(hobbies, elements);
     }
 
     private void setSubjects(List<String> subjects) {
@@ -101,9 +101,9 @@ public class PracticeFormTest {
         }
     }
 
-    private void checkByList(String category, List<String> subjects, ElementsCollection elements) {
+    private void checkByList(List<String> subjects, SelenideElement elements) {
         for (String subject : subjects) {
-            elements.filterBy(text(category)).shouldHave(texts(subject));
+            elements.shouldHave(text(subject));
         }
     }
 
