@@ -1,7 +1,7 @@
 package com.demoqa;
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
@@ -19,6 +18,7 @@ import static utils.Randomizer.*;
 
 public class PracticeFormTest {
     private final Faker faker = new Faker();
+    private final SelenideElement tableResponsive = $(".table-responsive");
 
     @BeforeEach
     void setUp() {
@@ -75,8 +75,8 @@ public class PracticeFormTest {
         $("#submit").click();
 
         //assert
-        SelenideElement elements = $(".table-responsive");
-        elements.shouldHave(
+
+        tableResponsive.shouldHave(
                 text("Student Name " + firstName + " " + lastName),
                 text("Student Email " + userEmail),
                 text("Gender " + gender),
@@ -85,8 +85,8 @@ public class PracticeFormTest {
                 text("Picture " + picture),
                 text("Address " + currentAddress),
                 text("State and City " + state + " " + city));
-        checkByList(subjects, elements);
-        checkByList(hobbies, elements);
+        checkByList(subjects);
+        checkByList(hobbies);
     }
 
     private void setSubjects(List<String> subjects) {
@@ -101,9 +101,9 @@ public class PracticeFormTest {
         }
     }
 
-    private void checkByList(List<String> subjects, SelenideElement elements) {
+    private void checkByList(List<String> subjects) {
         for (String subject : subjects) {
-            elements.shouldHave(text(subject));
+            tableResponsive.shouldHave(text(subject));
         }
     }
 
